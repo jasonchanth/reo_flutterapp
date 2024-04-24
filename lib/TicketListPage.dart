@@ -22,6 +22,7 @@ class TicketListPage extends StatefulWidget {
 class _TicketListPageState extends State<TicketListPage> {
   List<Ticket> ticketList = [];
   bool _isRefreshing = false;
+  int currentPage = 0;
 
   ScrollController _scrollController = ScrollController();
   late String username = ""; // New variable to store the username
@@ -141,7 +142,7 @@ class _TicketListPageState extends State<TicketListPage> {
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               if (ticketList
@@ -260,6 +261,18 @@ class _TicketListPageState extends State<TicketListPage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home),label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.search),label: 'seach'),
+        ],
+        onDestinationSelected: (int index){
+          setState(() {
+            currentPage = index;
+          });
+        },
+          selectedIndex:currentPage,
       ),
     );
   }
