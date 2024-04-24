@@ -20,7 +20,7 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
 
   final List<List<bool>> _completedTasks = List.generate(
     7,
-        (_) => [false, false, false, false, false, false, false],
+    (_) => [false, false, false, false, false, false, false],
   );
 
   @override
@@ -29,7 +29,6 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
       appBar: AppBar(
         title: Text('Polling Station Information'),
       ),
-
       drawer: menulist(),
       body: SafeArea(
         child: Column(
@@ -119,7 +118,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
             SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
-                itemCount: _tasks.length + 1, // Add 1 for the additional ListTile
+                itemCount: _tasks.length + 1,
+                // Add 1 for the additional ListTile
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     // Display "Mon" to "Sat" labels
@@ -127,7 +127,6 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                       padding: const EdgeInsets.symmetric(horizontal: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                         children: [
                           SizedBox(width: 35.0), // Empty space for alignment
                           Text('Mon'),
@@ -142,7 +141,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                     );
                   } else {
                     // Display task and checkboxes
-                    int taskIndex = index - 1; // Adjust the index to match the tasks
+                    int taskIndex =
+                        index - 1; // Adjust the index to match the tasks
 
                     return Column(
                       children: [
@@ -160,15 +160,17 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Row(
-                           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(width: 48.0), // Empty space for alignment
+                              SizedBox(width: 48.0),
+                              // Empty space for alignment
                               Checkbox(
                                 value: _completedTasks[taskIndex][0],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][0] = value ?? false;
+                                    _completedTasks[taskIndex][0] =
+                                        value ?? false;
                                   });
                                 },
                               ),
@@ -176,7 +178,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                                 value: _completedTasks[taskIndex][1],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][1] = value ?? false;
+                                    _completedTasks[taskIndex][1] =
+                                        value ?? false;
                                   });
                                 },
                               ),
@@ -184,7 +187,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                                 value: _completedTasks[taskIndex][2],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][2] = value ?? false;
+                                    _completedTasks[taskIndex][2] =
+                                        value ?? false;
                                   });
                                 },
                               ),
@@ -192,7 +196,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                                 value: _completedTasks[taskIndex][3],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][3] = value ?? false;
+                                    _completedTasks[taskIndex][3] =
+                                        value ?? false;
                                   });
                                 },
                               ),
@@ -200,7 +205,8 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                                 value: _completedTasks[taskIndex][4],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][4] = value ?? false;
+                                    _completedTasks[taskIndex][4] =
+                                        value ?? false;
                                   });
                                 },
                               ),
@@ -208,19 +214,21 @@ class _PollingStationScheduleState extends State<PollingStationSchedule> {
                                 value: _completedTasks[taskIndex][5],
                                 onChanged: (value) {
                                   setState(() {
-                                    _completedTasks[taskIndex][5] = value ?? false;
+                                    _completedTasks[taskIndex][5] =
+                                        value ?? false;
                                   });
                                 },
                               ),
 
-                  Checkbox(
-                    value: _completedTasks[taskIndex][6],
-                    onChanged: (value) {
-                      setState(() {
-                        _completedTasks[taskIndex][6] = value ?? false;
-                      });
-                    },
-                  ),
+                              Checkbox(
+                                value: _completedTasks[taskIndex][6],
+                                onChanged: (value) {
+                                  setState(() {
+                                    _completedTasks[taskIndex][6] =
+                                        value ?? false;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                         ),

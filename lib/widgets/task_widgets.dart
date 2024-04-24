@@ -4,9 +4,9 @@ import 'dart:convert';
 
 import '../configuration/config.dart';
 
-
 class TaskWidget extends StatefulWidget {
   final String userRole;
+
   TaskWidget({required this.userRole});
 
   @override
@@ -50,8 +50,10 @@ class _TaskWidgetState extends State<TaskWidget> {
                 if (Config.pageRoutes.containsKey(menuPath)) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => Config.pageRoutes[menuPath]!),
-                  );}
+                    MaterialPageRoute(
+                        builder: (context) => Config.pageRoutes[menuPath]!),
+                  );
+                }
                 // Navigate to menuPath
               },
               child: Card(
@@ -60,7 +62,8 @@ class _TaskWidgetState extends State<TaskWidget> {
                     Image.network(menuList[index]['menuImg']),
                     Text(
                       menuList[index]['menuName'],
-                      style: TextStyle(fontSize: 35), // You can adjust the font size here
+                      style: TextStyle(
+                          fontSize: 35), // You can adjust the font size here
                     ),
                   ],
                 ),
@@ -69,7 +72,6 @@ class _TaskWidgetState extends State<TaskWidget> {
           },
         ),
       ),
-
     );
   }
 }

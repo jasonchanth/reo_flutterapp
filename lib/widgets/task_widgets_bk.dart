@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/PollingStation.dart';
 import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
+
 //import 'package:flutter_to_do_list/const/colors.dart';
 //import 'package:flutter_to_do_list/data/firestor.dart';
 //import 'package:flutter_to_do_list/model/notes_model.dart';
@@ -8,6 +9,7 @@ import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
 
 class Task_Widget_bk extends StatefulWidget {
   String _note;
+
   Task_Widget_bk(this._note, {super.key});
 
   @override
@@ -20,31 +22,29 @@ class _Task_WidgetState_bk extends State<Task_Widget_bk> {
     bool isDone = false;
     return Scaffold(
       appBar: AppBar(
-         title: Text('選舉事務'),
+        title: Text('選舉事務'),
       ),
-    body:  Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-      child: Container(
-        width: double.infinity,
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        child: Container(
+          width: double.infinity,
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
 
           //padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
-
               // image
               imageee(),
               SizedBox(width: 15),
@@ -57,7 +57,6 @@ class _Task_WidgetState_bk extends State<Task_Widget_bk> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         Text(
                           "title",
                           style: TextStyle(
@@ -72,8 +71,8 @@ class _Task_WidgetState_bk extends State<Task_Widget_bk> {
                             setState(() {
                               isDone = !isDone;
                             });
-                           // Firestore_Datasource()
-                             //   .isdone(widget._note.id, isDone);
+                            // Firestore_Datasource()
+                            //   .isdone(widget._note.id, isDone);
                           },
                         )
                       ],
@@ -85,19 +84,17 @@ class _Task_WidgetState_bk extends State<Task_Widget_bk> {
                           fontWeight: FontWeight.w400,
                           color: Colors.grey.shade400),
                     ),
-                   // Spacer(),
+                    // Spacer(),
                     //åedit_time()
                   ],
                 ),
               ),
             ],
-
-    ),
-      ),
+          ),
+        ),
       ),
     );
   }
-
 
   Widget imageee() {
     return Container(

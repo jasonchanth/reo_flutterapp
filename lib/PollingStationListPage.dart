@@ -66,9 +66,9 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
     final url = '${Config.apiUrl}pollingstationlist/1';
-print(url);
-   // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
-   // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
+    print(url);
+    // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
+    // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
     final response = await dio.get(url);
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
@@ -143,11 +143,13 @@ print(url);
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (pollingStations.isEmpty) // Add a condition to check if the list is empty
+              if (pollingStations
+                  .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
                   onPressed: _refreshData,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
                     minimumSize: MaterialStateProperty.all<Size>(
                       Size(double.infinity, 100.0),
                     ),
@@ -162,9 +164,9 @@ print(url);
                 shrinkWrap: true,
                 controller: _scrollController,
                 //itemCount: pollingStations.length + 1,
-                itemCount: pollingStations.length ,
+                itemCount: pollingStations.length,
                 separatorBuilder: (context, index) => Divider(),
-                itemBuilder: (context, index ) {
+                itemBuilder: (context, index) {
 /*
                   if (index == pollingStations.length) {
 
@@ -215,7 +217,7 @@ print(url);
                     title: Text(
                       pollingStation.id,
                       style: TextStyle(
-                       // fontFamily: 'SimSun',
+                        // fontFamily: 'SimSun',
                         fontSize: 25, // Adjust the font size here
                         //color: Colors.white,
                       ),
@@ -227,8 +229,8 @@ print(url);
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                               // TicketDetailsPage(ticket: ticket),
-                            PollingStationSchedule(),
+                                // TicketDetailsPage(ticket: ticket),
+                                PollingStationSchedule(),
                           ),
                         );
                       },
@@ -251,14 +253,12 @@ print(url);
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                            //  TicketDetailsPage(ticket: ticket),
-                          PollingStationSchedule(),
+                              //  TicketDetailsPage(ticket: ticket),
+                              PollingStationSchedule(),
                         ),
                       );
                     },
-
                   );
-
                 },
               ),
             ],

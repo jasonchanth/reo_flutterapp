@@ -63,9 +63,9 @@ class _TicketListPageState extends State<TicketListPage> {
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
     final url = '${Config.apiUrl}ticketlist/1';
-print(url);
-   // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
-   // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
+    print(url);
+    // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
+    // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
     final response = await dio.get(url);
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
@@ -144,11 +144,13 @@ print(url);
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (ticketList.isEmpty) // Add a condition to check if the list is empty
+              if (ticketList
+                  .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
                   onPressed: _refreshData,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
                     minimumSize: MaterialStateProperty.all<Size>(
                       Size(double.infinity, 100.0),
                     ),
@@ -213,7 +215,7 @@ print(url);
                     title: Text(
                       ticket.subject,
                       style: TextStyle(
-                       // fontFamily: 'SimSun',
+                        // fontFamily: 'SimSun',
                         fontSize: 25, // Adjust the font size here
                         //color: Colors.white,
                       ),
@@ -252,9 +254,7 @@ print(url);
                         ),
                       );
                     },
-
                   );
-
                 },
               ),
             ],

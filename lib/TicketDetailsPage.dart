@@ -158,8 +158,6 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                 // 注意：需要在 pubspec.yaml 文件中添加相机权限和相册权限
                 // 参考：https://pub.dev/packages/image_picker
 
-
-
                 // 在此添加调用相机或相册的代码
               },
               child: Text('Take Photo'),

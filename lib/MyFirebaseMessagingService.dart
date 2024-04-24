@@ -45,25 +45,24 @@ class MyFirebaseMessagingService {
         dataBody: message.data['body'],
       );
 
-
-     // if(_notificationInfo != null){
-        showSimpleNotification(
-          Text(title),
-          leading: NotificationBadge(totalNotifications: 2),
-          subtitle: Text(body),
-          background: Colors.cyan.shade700,
-          duration: Duration(seconds: 2),
-        );
+      // if(_notificationInfo != null){
+      showSimpleNotification(
+        Text(title),
+        leading: NotificationBadge(totalNotifications: 2),
+        subtitle: Text(body),
+        background: Colors.cyan.shade700,
+        duration: Duration(seconds: 2),
+      );
       //}
     });
   }
-  static Future _firebaseMessingBackgroudHandler(RemoteMessage message) async{
+
+  static Future _firebaseMessingBackgroudHandler(RemoteMessage message) async {
     print("Handling a background messages: ${message.notification}");
     print("311");
     await Firebase.initializeApp();
 
     String? title = message.data['title'];
     String? body = message.data['body'];
-
   }
 }

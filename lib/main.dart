@@ -16,11 +16,9 @@ import 'firebase_options.dart';
 import 'PushNotification.dart';
 import 'configuration/config.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-  }
+  if (kIsWeb) {}
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -86,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _checkLoginStatus();
   }
+
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedUsername = prefs.getString('username');
@@ -96,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
       // Login information found, automatically populate the fields and verify login
       _usernameController.text = storedUsername;
       _passwordController.text = storedPassword;
-      _verifyLogin(storedUsername, storedPassword,storedFCMToken!);
+      _verifyLogin(storedUsername, storedPassword, storedFCMToken!);
     }
   }
 
@@ -104,8 +103,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       // title: Text('選舉事務消防'),
-      ),
+          // title: Text('選舉事務消防'),
+          ),
       body: Stack(
         children: [
           Padding(
@@ -139,17 +138,18 @@ class _LoginPageState extends State<LoginPage> {
                     String username = _usernameController.text;
                     String password = _passwordController.text;
 
-
                     // Send login information to the server for verification
-                    _verifyLogin(username, password,fcmToken);
+                    _verifyLogin(username, password, fcmToken);
                   },
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(Size(200, 50)), // Adjust the size as needed
+                    minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                    // Adjust the size as needed
                     maximumSize: MaterialStateProperty.all(Size(200, 50)),
                   ),
                   child: const Text(
                     'Login',
-                    style: TextStyle(fontSize: 30), // Adjust the font size as needed
+                    style: TextStyle(
+                        fontSize: 30), // Adjust the font size as needed
                   ),
                 ),
               ],
@@ -160,7 +160,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _verifyLogin(String username, String password, String? fcMToken) async {
+  Future<void> _verifyLogin(
+      String username, String password, String? fcMToken) async {
     //final url = Uri.parse('${Config.apiUrl}helpdesk/helpdesk_login.php');
     final url = Uri.parse('${Config.apiUrl}login');
     try {
@@ -170,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
         body: {
           'username': username,
           'password': password,
-          'fcmToken': fcmToken?? fcMToken,
+          'fcmToken': fcmToken ?? fcMToken,
         },
       ).timeout(Duration(seconds: 10));
       ;

@@ -31,8 +31,8 @@ class menulist extends StatelessWidget {
                     "A0101",
                   ),
                   currentAccountPicture: CircleAvatar(
-                    // backgroundImage: new AssetImage("assets/images/logo.png"),
-                  ),
+                      // backgroundImage: new AssetImage("assets/images/logo.png"),
+                      ),
                 );
               } else {
                 // If there's an error or no username found, display a default header
@@ -40,8 +40,8 @@ class menulist extends StatelessWidget {
                   accountName: Text("Guest"),
                   accountEmail: Text(""),
                   currentAccountPicture: CircleAvatar(
-                    // backgroundImage: new AssetImage("assets/images/logo.png"),
-                  ),
+                      // backgroundImage: new AssetImage("assets/images/logo.png"),
+                      ),
                 );
               }
             },
@@ -53,7 +53,8 @@ class menulist extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 // MaterialPageRoute(builder: (context) => HomePage(userRole: 'admin')),
-                MaterialPageRoute(builder: (context) =>  TaskWidget(userRole: 'admin')),
+                MaterialPageRoute(
+                    builder: (context) => TaskWidget(userRole: 'admin')),
               );
             },
           ),
@@ -63,8 +64,9 @@ class menulist extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-               // MaterialPageRoute(builder: (context) => HomePage(userRole: 'admin')),
-                MaterialPageRoute(builder: (context) =>  PollingStationDetailsPage()),
+                // MaterialPageRoute(builder: (context) => HomePage(userRole: 'admin')),
+                MaterialPageRoute(
+                    builder: (context) => PollingStationDetailsPage()),
               );
             },
           ),
@@ -74,7 +76,8 @@ class menulist extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => PollingStationListPage()),
+                MaterialPageRoute(
+                    builder: (context) => PollingStationListPage()),
               );
             },
           ),

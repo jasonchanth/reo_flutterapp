@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NotificationBadge extends StatelessWidget{
+class NotificationBadge extends StatelessWidget {
   final int totalNotifications;
 
   const NotificationBadge({required this.totalNotifications});
@@ -10,19 +10,21 @@ class NotificationBadge extends StatelessWidget{
     // TODO: implement build
     return Container(
       width: 40.0,
-    height: 40.0,
-    decoration: new BoxDecoration(
-      color: Colors.red,
-      shape: BoxShape.circle,
-    ),
-    child: Center(
-    child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Text(
-        '$totalNotifications',
-    style: TextStyle(color: Colors.white, fontSize: 20),)
-    ),
-    ),
+      height: 40.0,
+      decoration: new BoxDecoration(
+        color: Colors.red,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '$totalNotifications',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            )),
+      ),
     );
   }
+
+
 }

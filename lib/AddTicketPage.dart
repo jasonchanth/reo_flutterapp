@@ -14,7 +14,6 @@ enum MediaSelectionType {
   gallery,
   camera,
 }
-
 class _AddTicketPageState extends State<AddTicketPage> {
   final List<String> ticketTypes = ['Type A', 'Type B', 'Type C'];
   List<File> selectedMedia = [];
@@ -66,6 +65,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
       // Send the form data to the server
 
+
       print(Config.apiUrl);
       Response response = await Dio().post(
         '${Config.apiUrl}addTicket',
@@ -88,16 +88,16 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
   void _showTicketAddedNotification(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Ticket added'),
+      const SnackBar(
+        content: Text('Ticket added'),
       ),
     );
   }
 
   void _showErrorNotification(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Error adding ticket'),
+      const SnackBar(
+        content: Text('Error adding ticket'),
       ),
     );
   }
@@ -123,11 +123,12 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
   @override
   Widget build(BuildContext context) {
-    MediaSelectionType? currentSelectionType;  // 增加?以便在初始时可能为空
+    MediaSelectionType? currentSelectionType; // 增加?以便在初始时可能为空
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Ticket'),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -165,12 +166,15 @@ class _AddTicketPageState extends State<AddTicketPage> {
                   labelText: 'Ticket Details',
                 ),
               ),
-              DropdownButtonFormField<MediaSelectionType>(  // 修改此处的类型选择
+              DropdownButtonFormField<MediaSelectionType>(
+                // 修改此处的类型选择
                 value: currentSelectionType,
                 items: MediaSelectionType.values.map((type) {
                   return DropdownMenuItem<MediaSelectionType>(
                     value: type,
-                    child: Text(type == MediaSelectionType.gallery ? 'gallery' : 'camera'),
+                    child: Text(type == MediaSelectionType.gallery
+                        ? 'gallery'
+                        : 'camera'),
                   );
                 }).toList(),
                 onChanged: (value) {
