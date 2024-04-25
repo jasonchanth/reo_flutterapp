@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'TicketListPage.dart';
+import 'helpdesk/ticket_list.dart';
 
 class SetupPage extends StatelessWidget {
   final String userRole;

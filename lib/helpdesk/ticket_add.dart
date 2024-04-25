@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'configuration/config.dart';
+import '../configuration/config.dart';
 
 class AddTicketPage extends StatefulWidget {
   @override
@@ -125,9 +125,10 @@ class _AddTicketPageState extends State<AddTicketPage> {
   Widget build(BuildContext context) {
     MediaSelectionType? currentSelectionType; // 增加?以便在初始时可能为空
     return Scaffold(
+      /*
       appBar: AppBar(
         title: const Text('Add Ticket'),
-      ),
+      ),*/
 
       body: Padding(
         padding: const EdgeInsets.all(16.0),

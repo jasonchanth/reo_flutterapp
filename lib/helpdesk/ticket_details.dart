@@ -5,9 +5,9 @@ import 'package:helpdesk_demo/threadData.dart';
 
 import 'Ticket.dart';
 
-import 'MyFirebaseMessagingService.dart';
-import 'configuration/config.dart';
-import 'menu_list.dart';
+import '../MyFirebaseMessagingService.dart';
+import '../configuration/config.dart';
+import '../menu_list.dart';
 
 import 'package:http/http.dart' as http;
 

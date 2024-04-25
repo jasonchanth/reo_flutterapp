@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'Ticket.dart';
-import 'configuration/config.dart';
-import 'main.dart';
-import 'TicketDetailsPage.dart';
-import 'AddTicketPage.dart';
+import '../helpdesk/Ticket.dart';
+import '../configuration/config.dart';
+import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'menu_list.dart';
+import '../menu_list.dart';
 
-import 'MyFirebaseMessagingService.dart';
+import '../MyFirebaseMessagingService.dart';
 
-class TicketListPage extends StatefulWidget {
-  const TicketListPage({Key? key}) : super(key: key);
+class TaskListPage extends StatefulWidget {
+  const TaskListPage({Key? key}) : super(key: key);
 
   @override
-  _TicketListPageState createState() => _TicketListPageState();
+  _TaskListPageState createState() => _TaskListPageState();
 }
 
-class _TicketListPageState extends State<TicketListPage> {
+class _TaskListPageState extends State<TaskListPage> {
   List<Ticket> ticketList = [];
   bool _isRefreshing = false;
   int currentPage = 0;
@@ -63,7 +61,7 @@ class _TicketListPageState extends State<TicketListPage> {
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
-    final url = '${Config.apiUrl}ticketlist/1';
+    const url = '${Config.apiUrl}ticketlist/1';
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
@@ -112,8 +110,8 @@ class _TicketListPageState extends State<TicketListPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Connection Error'),
-            content: Text('Failed to connect to the server.'),
+            title: const Text('Connection Error'),
+            content: const Text('Failed to connect to the server.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -125,9 +123,11 @@ class _TicketListPageState extends State<TicketListPage> {
           ),
         );
       } finally {
-        setState(() {
-          _isRefreshing = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isRefreshing = false;
+          });
+        }
       }
     }
   }
@@ -135,10 +135,11 @@ class _TicketListPageState extends State<TicketListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*
       appBar: AppBar(
         title: Text('Ticket List - $username'),
       ),
-      drawer: menulist(),
+      drawer: menulist(),*/
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: SingleChildScrollView(
@@ -156,7 +157,7 @@ class _TicketListPageState extends State<TicketListPage> {
                       Size(double.infinity, 100.0),
                     ),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.refresh,
                     color: Colors.white,
                     size: 80,
@@ -165,10 +166,10 @@ class _TicketListPageState extends State<TicketListPage> {
               ListView.separated(
                 shrinkWrap: true,
                 controller: _scrollController,
-                itemCount: ticketList.length + 1,
+                itemCount: ticketList.length,
                 separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
-                  if (index == ticketList.length) {
+                  /*if (index == ticketList.length) {
                     return ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -191,7 +192,7 @@ class _TicketListPageState extends State<TicketListPage> {
                         ),
                       ),
                     );
-                  }
+                  }*/
 
                   final ticket = ticketList[index];
                   Color statusColor;
@@ -222,7 +223,7 @@ class _TicketListPageState extends State<TicketListPage> {
                       ),
                     ),
                     subtitle: Text(ticket.updatedAt),
-                    trailing: ElevatedButton(
+                    /*trailing: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -252,9 +253,10 @@ class _TicketListPageState extends State<TicketListPage> {
                         MaterialPageRoute(
                           builder: (context) =>
                               TicketDetailsPage(ticket: ticket),
+
                         ),
                       );
-                    },
+                    },*/
                   );
                 },
               ),
@@ -262,7 +264,7 @@ class _TicketListPageState extends State<TicketListPage> {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
+      /*bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home),label: 'Home'),
           NavigationDestination(icon: Icon(Icons.search),label: 'seach'),
@@ -273,7 +275,7 @@ class _TicketListPageState extends State<TicketListPage> {
           });
         },
           selectedIndex:currentPage,
-      ),
+      ),*/
     );
   }
 }

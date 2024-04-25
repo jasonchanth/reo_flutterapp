@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_demo/PollingStation.dart';
-import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'PollingStationSchedule.dart';
-import 'helpdesk/Ticket.dart';
-import 'configuration/config.dart';
-import 'main.dart';
-import 'helpdesk/ticket_details.dart';
-import 'helpdesk/ticket_add.dart';
+import 'Ticket.dart';
+import '../configuration/config.dart';
+import '../main.dart';
+import 'ticket_details.dart';
+import 'ticket_add.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'menu_list.dart';
+import '../menu_list.dart';
 
-import 'MyFirebaseMessagingService.dart';
+import '../MyFirebaseMessagingService.dart';
 
-class PollingStationListPage extends StatefulWidget {
-  const PollingStationListPage({Key? key}) : super(key: key);
+class TicketListPage extends StatefulWidget {
+  const TicketListPage({Key? key}) : super(key: key);
 
   @override
-  _PollingStationListPageState createState() => _PollingStationListPageState();
+  _TicketListPageState createState() => _TicketListPageState();
 }
 
-class _PollingStationListPageState extends State<PollingStationListPage> {
-  List<PollingStation> pollingStations = [];
+class _TicketListPageState extends State<TicketListPage> {
+  List<Ticket> ticketList = [];
   bool _isRefreshing = false;
+  int currentPage = 0;
 
   ScrollController _scrollController = ScrollController();
   late String username = ""; // New variable to store the username
@@ -65,7 +63,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
-    final url = '${Config.apiUrl}pollingstationlist/1';
+    const url = '${Config.apiUrl}ticketlist/1';
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
@@ -73,20 +71,24 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
       //final ticketData = json.decode(responseBody) as List<dynamic>;
-      final pollingStationList = response.data as List<dynamic>;
-      print(pollingStationList);
+      final ticketData = response.data as List<dynamic>;
+      print(ticketData);
       setState(() {
-        pollingStations = pollingStationList.map((data) {
+        ticketList = ticketData.map((data) {
           final id = data['id'] ?? '';
-          final owner = data['owner'] ?? '';
-          final address = data['address'] ?? '';
-          final phone = data['phone'] ?? '';
+          final type = data['subject'] ?? '';
+          final subject = data['subject'] ?? '';
+          final details = data['subject'] ?? '';
+          final status = data['status_name'] ?? '';
+          final updatedAt = data['updatedAt'] ?? '';
 
-          return PollingStation(
+          return Ticket(
             id: id.toString(),
-            owner: owner.toString(),
-            address: address.toString(),
-            phone: phone.toString(),
+            type: type.toString(),
+            subject: subject.toString(),
+            details: details.toString(),
+            status: status.toString(),
+            updatedAt: updatedAt.toString(),
           );
         }).toList();
       });
@@ -110,8 +112,8 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Connection Error'),
-            content: Text('Failed to connect to the server.'),
+            title: const Text('Connection Error'),
+            content: const Text('Failed to connect to the server.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -133,17 +135,18 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*
       appBar: AppBar(
-        title: Text('Polling Station List - $username'),
+        title: Text('Ticket List - $username'),
       ),
-      drawer: menulist(),
+      drawer: menulist(),*/
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (pollingStations
+              if (ticketList
                   .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
                   onPressed: _refreshData,
@@ -154,7 +157,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                       Size(double.infinity, 100.0),
                     ),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.refresh,
                     color: Colors.white,
                     size: 80,
@@ -163,13 +166,10 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
               ListView.separated(
                 shrinkWrap: true,
                 controller: _scrollController,
-                //itemCount: pollingStations.length + 1,
-                itemCount: pollingStations.length,
+                itemCount: ticketList.length ,
                 separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
-/*
-                  if (index == pollingStations.length) {
-
+                  /*if (index == ticketList.length) {
                     return ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -194,10 +194,10 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                     );
                   }*/
 
-                  final pollingStation = pollingStations[index];
+                  final ticket = ticketList[index];
                   Color statusColor;
 
-                  /* Set the button color based on the ticket status
+                  // Set the button color based on the ticket status
                   switch (ticket.status) {
                     case 'NEW':
                       statusColor = Colors.green;
@@ -211,38 +211,37 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                     case 'Closed':
                     default:
                       statusColor = Colors.grey;
-                  }*/
+                  }
 
                   return ListTile(
                     title: Text(
-                      pollingStation.id,
+                      ticket.subject,
                       style: TextStyle(
                         // fontFamily: 'SimSun',
                         fontSize: 25, // Adjust the font size here
                         //color: Colors.white,
                       ),
                     ),
-                    subtitle: Text(pollingStation.address),
+                    subtitle: Text(ticket.updatedAt),
                     trailing: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                // TicketDetailsPage(ticket: ticket),
-                                PollingStationSchedule(),
+                                TicketDetailsPage(ticket: ticket),
                           ),
                         );
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
+                            MaterialStateProperty.all<Color>(statusColor),
                         minimumSize: MaterialStateProperty.all<Size>(
                           const Size(140, 36), // Customize the button size here
                         ),
                       ),
                       child: Text(
-                        pollingStation.owner,
+                        ticket.status,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -253,8 +252,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              //  TicketDetailsPage(ticket: ticket),
-                              PollingStationSchedule(),
+                              TicketDetailsPage(ticket: ticket),
                         ),
                       );
                     },
@@ -265,6 +263,18 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
           ),
         ),
       ),
+      /*bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home),label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.search),label: 'seach'),
+        ],
+        onDestinationSelected: (int index){
+          setState(() {
+            currentPage = index;
+          });
+        },
+          selectedIndex:currentPage,
+      ),*/
     );
   }
 }

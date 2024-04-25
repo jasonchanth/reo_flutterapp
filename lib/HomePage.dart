@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/PollingStationListPage.dart';
 
 import 'PollingStationDetailsPage.dart';
-import 'TicketListPage.dart';
+import 'helpdesk/ticket_list.dart';
 
 class HomePage extends StatelessWidget {
   final String userRole;

@@ -37,7 +37,10 @@ class _TaskWidgetState extends State<TaskWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('選舉事務3'),
+        centerTitle: true,
+        title: Text('選舉事務',style: TextStyle(
+            fontSize: 35)),
+          backgroundColor: Config.appBarColor
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
