@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import '../Task.dart';
 import '../helpdesk/Ticket.dart';
 import '../configuration/config.dart';
 import '../main.dart';
@@ -11,15 +10,15 @@ import '../menu_list.dart';
 
 import '../MyFirebaseMessagingService.dart';
 
-class TaskListPage extends StatefulWidget {
-  const TaskListPage({Key? key}) : super(key: key);
+class TaskListPage_bk extends StatefulWidget {
+  const TaskListPage_bk({Key? key}) : super(key: key);
 
   @override
-  _TaskListPageState createState() => _TaskListPageState();
+  _TaskListPageState_bk createState() => _TaskListPageState_bk();
 }
 
-class _TaskListPageState extends State<TaskListPage> {
-  List<Task> taskList = [];
+class _TaskListPageState_bk extends State<TaskListPage_bk> {
+  List<Ticket> ticketList = [];
   bool _isRefreshing = false;
   int currentPage = 0;
 
@@ -30,7 +29,7 @@ class _TaskListPageState extends State<TaskListPage> {
   void initState() {
     super.initState();
     fetchUsername();
-    fetchTasks();
+    fetchTickets();
     _scrollController.addListener(_onScroll);
     MyFirebaseMessagingService.registerNotification();
   }
@@ -58,11 +57,11 @@ class _TaskListPageState extends State<TaskListPage> {
     }
   }
 
-  Future<void> fetchTasks() async {
+  Future<void> fetchTickets() async {
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
-    const url = '${Config.apiUrl}task/A1010';
+    const url = '${Config.apiUrl}ticketlist/1';
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
@@ -70,38 +69,30 @@ class _TaskListPageState extends State<TaskListPage> {
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
       //final ticketData = json.decode(responseBody) as List<dynamic>;
-      final taskData = response.data as List<dynamic>;
+      final ticketData = response.data as List<dynamic>;
+      print(ticketData);
       setState(() {
-        taskList = taskData.map((data) {
+        ticketList = ticketData.map((data) {
           final id = data['id'] ?? '';
-          final pollingStationId = data['pollingstationid'] ?? '';
-          final task1 = data['task1']?? 'Complete';
-          final task2 = data['task2']?? 'Complete';
-          final task3 = data['task3']?? 'Complete';
-          final task4 = data['task4']?? 'Complete';
-          final task5 = data['task5']?? 'Complete';
-          final task6 = data['task6']?? 'Complete';
-          final task7 = data['task7']?? 'Complete';
-          final totalActiveTable = data['totalActiveTable'] ?? '';
+          final type = data['subject'] ?? '';
+          final subject = data['subject'] ?? '';
+          final details = data['subject'] ?? '';
+          final status = data['status_name'] ?? '';
+          final updatedAt = data['updatedAt'] ?? '';
 
-          return Task(
+          return Ticket(
             id: id.toString(),
-            pollingStationId: pollingStationId.toString(),
-            task1: task1.toString(),
-            task2: task2.toString(),
-            task3: task3.toString(),
-            task4: task4.toString(),
-            task5: task5.toString(),
-            task6: task6.toString(),
-            task7: task7.toString(),
-            totalActiveTable: totalActiveTable.toString(),
+            type: type.toString(),
+            subject: subject.toString(),
+            details: details.toString(),
+            status: status.toString(),
+            updatedAt: updatedAt.toString(),
           );
-        }).cast<Task>().toList();
+        }).toList();
       });
     } else {
       throw Exception('Failed to fetch tickets');
     }
-   // print('taskList'+taskList.length());
   }
 
   Future<void> _refreshData() async {
@@ -111,9 +102,9 @@ class _TaskListPageState extends State<TaskListPage> {
       });
       try {
         // Fetch new ticket data
-        await fetchTasks().timeout(const Duration(seconds: 10));
+        await fetchTickets().timeout(Duration(seconds: 10));
         ;
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(Duration(seconds: 2));
       } catch (e) {
         print('Error: $e');
         showDialog(
@@ -126,7 +117,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('OK'),
+                child: Text('OK'),
               ),
             ],
           ),
@@ -155,7 +146,7 @@ class _TaskListPageState extends State<TaskListPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (taskList
+              if (ticketList
                   .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
                   onPressed: _refreshData,
@@ -175,81 +166,97 @@ class _TaskListPageState extends State<TaskListPage> {
               ListView.separated(
                 shrinkWrap: true,
                 controller: _scrollController,
-                itemCount: 7,
-                separatorBuilder: (context, index) => const Divider(),
-
+                itemCount: ticketList.length,
+                separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
+                  /*if (index == ticketList.length) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddTicketPage()),
+                        );
+                      },
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all<Size>(
+                          Size(double.infinity,
+                              48.0), // Customize the button height here
+                        ),
+                      ),
+                      child: Text(
+                        'Add Ticket',
+                        style: TextStyle(
+                          fontSize: 40, // Adjust the font size here
+                          //color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }*/
 
-                  final task = taskList.firstOrNull;
-                  //final task = taskList[0];
-                  final dateTimeList = [
-                    task?.task1,
-                    task?.task2,
-                    task?.task3,
-                    task?.task4,
-                    task?.task5,
-                    task?.task6,
-                    task?.task7,
-                    task?.totalActiveTable,
-                  ];
-
+                  final ticket = ticketList[index];
                   Color statusColor;
 
                   // Set the button color based on the ticket status
-                  switch (dateTimeList[index]) {
-                    case 'Complete':
-                      statusColor = Colors.grey;
-                      break;
-                    case 'Null':
-                      statusColor = Colors.grey;
-                      break;
-                    default:
+                  switch (ticket.status) {
+                    case 'NEW':
                       statusColor = Colors.green;
-                  }
-
-                  if (index == 6 && (dateTimeList[index] != dateTimeList[index+1])) {
-                    statusColor = Colors.grey;
+                      break;
+                    case 'IN-PROGRESS':
+                      statusColor = Colors.yellow;
+                      break;
+                    case 'Escalated':
+                      statusColor = Colors.red;
+                      break;
+                    case 'Closed':
+                    default:
+                      statusColor = Colors.grey;
                   }
 
                   return ListTile(
                     title: Text(
-                      'Task ${index+1}',
+                      ticket.subject,
                       style: const TextStyle(
                         // fontFamily: 'SimSun',
-                        fontSize: 30, // Adjust the font size here
+                        fontSize: 25, // Adjust the font size here
                         //color: Colors.white,
                       ),
                     ),
-                    subtitle: const Text('XXX XXX XXX'),
-                    trailing: ElevatedButton(
+                    subtitle: Text(ticket.updatedAt),
+                    /*trailing: ElevatedButton(
                       onPressed: () {
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TicketDetailsPage(ticket: ticket),
+                          ),
+                        );
                       },
                       style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all<Color>(statusColor),
+                            MaterialStateProperty.all<Color>(statusColor),
                         minimumSize: MaterialStateProperty.all<Size>(
-                          const Size(100, 100), // Customize the button size here
+                          const Size(140, 36), // Customize the button size here
                         ),
                       ),
-                      child:index == 6 ?
-                      Text(
-                        "${dateTimeList[index]}/${dateTimeList[index+1]}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      )
-                          :Text(
-                        dateTimeList[index].toString(),
-                        style: const TextStyle(
+                      child: Text(
+                        ticket.status,
+                        style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                     ),
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TicketDetailsPage(ticket: ticket),
 
-                    },
-
+                        ),
+                      );
+                    },*/
                   );
                 },
               ),

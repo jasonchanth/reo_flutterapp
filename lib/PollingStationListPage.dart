@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/PollingStation.dart';
-import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';

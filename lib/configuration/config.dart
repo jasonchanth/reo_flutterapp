@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/helpdesk/helpdesk_main.dart';
 
 import '../PollingStationListPage.dart';
@@ -9,7 +10,7 @@ class Config {
   static const String apiUrl = 'http://192.168.70.137:8080/';
   static const int maxRetries = 3;
   static const bool enableLogging = true;
-  static const Color appBarColor = CupertinoColors.activeGreen;
+  static const Color appBarColor = Colors.lightBlue;
   static Map<String, Widget> pageRoutes = {
 
     'PollingStationMain': const PollingStationMain(),

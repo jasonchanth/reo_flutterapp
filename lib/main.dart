@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/notification_badge.dart';
+import 'package:helpdesk_demo/widgets/homePageM.dart';
 import 'package:helpdesk_demo/widgets/task_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -120,15 +121,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 TextField(
                   controller: _usernameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Username',
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                   ),
                 ),
@@ -200,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
               //builder: (context) => HomePage(userRole: 'admin'), // Pass userRole as "admin"
-              builder: (context) => TaskWidget(userRole: 'admin'),
+             // builder: (context) => TaskWidget(userRole: 'admin'),
+              builder: (context) => HomePageM(userRole: 'admin'),
             ),
           );
         } else {

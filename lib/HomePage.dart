@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/PollingStationListPage.dart';
 
-import 'PollingStationDetailsPage.dart';
 import 'helpdesk/ticket_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,7 +19,7 @@ class HomePage extends StatelessWidget {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => PollingStationDetailsPage()),
+                builder: (context) => PollingStationListPage()),
           );
         },
         'roles': ['admin'],

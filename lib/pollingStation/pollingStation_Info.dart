@@ -15,17 +15,22 @@ class PollingStationInfo extends StatelessWidget {
             children: [
               Text(
                 'Station Code: ABC123',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
                 'Address: 123 Main Street 123, Anytown USA 12345',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Owner: Miss Chan',
+                style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 8),
               Text(
                 'Tel: 123-456-7890',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 20),
               ),
             ],
           ),

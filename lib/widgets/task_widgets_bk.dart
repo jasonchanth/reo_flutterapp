@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/PollingStation.dart';
-import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
+//import 'package:helpdesk_demo/PollingStationDetailsPage.dart';
 
 //import 'package:flutter_to_do_list/const/colors.dart';
 //import 'package:flutter_to_do_list/data/firestor.dart';
