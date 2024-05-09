@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -169,13 +170,18 @@ class _LoginPageState extends State<LoginPage> {
       print("run login");
       final response = await http.post(
         url,
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic ' +
+              base64Encode(utf8.encode('$username:$password')),
+        },
         body: {
           'username': username,
           'password': password,
           'fcmToken': fcmToken ?? fcMToken,
         },
       ).timeout(Duration(seconds: 10));
-      ;
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
@@ -188,6 +194,7 @@ class _LoginPageState extends State<LoginPage> {
           await prefs.setString('password', password);
           await prefs.setString('fcmToken', fcmToken!);
           await prefs.setInt('userID', responseData['userID']);
+          await prefs.setString('token', responseData['token']);
           print(responseData);
           print(responseData['userID']);
 

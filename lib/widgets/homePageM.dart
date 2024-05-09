@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../configuration/config.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class HomePageM extends StatefulWidget {
   const HomePageM({super.key, required String userRole});
 
@@ -19,10 +21,20 @@ class _HomePageMState extends State<HomePageM> {
   }
   Future<void> _fetchMenuData() async {
     try {
-      Response response = await Dio().get('${Config.apiUrl}usermenu/admin');
-      setState(() {
-        menuList = response.data;
-      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        Options options = Options(headers: {'Authorization': 'Bearer $token'});
+        Response response = await Dio().get(
+          '${Config.apiUrl}usermenu/admin',
+          options: options,
+        );
+        setState(() {
+          menuList = response.data;
+        });
+      } else {
+        // Handle token not found in SharedPreferences
+      }
     } catch (e) {
       print('Error fetching menu data: $e');
     }
@@ -37,7 +49,7 @@ class _HomePageMState extends State<HomePageM> {
           children: [
             Row(
               children: [
-                Text('REO-EPR Support',
+                const Text('REO-EPR Support',
                     style:
                         TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                 Expanded(child: Container()),

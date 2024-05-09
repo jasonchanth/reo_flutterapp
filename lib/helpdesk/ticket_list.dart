@@ -60,6 +60,8 @@ class _TicketListPageState extends State<TicketListPage> {
   }
 
   Future<void> fetchTickets() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
@@ -67,7 +69,11 @@ class _TicketListPageState extends State<TicketListPage> {
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
-    final response = await dio.get(url);
+    //final response = await dio.get(url);
+    final response = await dio.get(
+      url,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
       //final ticketData = json.decode(responseBody) as List<dynamic>;

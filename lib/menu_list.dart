@@ -29,10 +29,10 @@ class menulist extends StatelessWidget {
                   accountName: Text(
                     snapshot.data!,
                   ),
-                  accountEmail: Text(
+                  accountEmail: const Text(
                     "A0101",
                   ),
-                  currentAccountPicture: CircleAvatar(
+                  currentAccountPicture: const CircleAvatar(
                       // backgroundImage: new AssetImage("assets/images/logo.png"),
                       ),
                 );
@@ -84,7 +84,7 @@ class menulist extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: CircleAvatar(child: Icon(Icons.computer)),
+            leading: const CircleAvatar(child: Icon(Icons.computer)),
             title: Text('helpdesk'),
             onTap: () {
               Navigator.pushReplacement(

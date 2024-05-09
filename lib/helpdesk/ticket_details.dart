@@ -12,6 +12,8 @@ import '../menu_list.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 class TicketDetailsPage extends StatefulWidget {
   final Ticket ticket;
@@ -23,7 +25,7 @@ class TicketDetailsPage extends StatefulWidget {
 }
 
 class _TicketDetailsPageState extends State<TicketDetailsPage> {
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
   String _message = '';
   List<ThreadData> threadData = [];
 
@@ -35,14 +37,22 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
   }
 
   Future<void> fetchThreadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final dio = Dio();
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
-    final url = Uri.parse('${Config.apiUrl}threads/${widget.ticket.id}');
+    //final url = Uri.parse('${Config.apiUrl}threads/${widget.ticket.id}');
+    final url = '${Config.apiUrl}threads/${widget.ticket.id}';
     print(url);
     //final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
-    final response = await http.get(url);
+    final response = await dio.get(
+      url,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
     if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final ticketData = json.decode(responseBody) as List<dynamic>;
+     // final responseBody = utf8.decode(response.data);
+      //final ticketData = json.decode(responseBody) as List<dynamic>;
+      final ticketData = response.data as List<dynamic>;
       print(ticketData);
       if (mounted) {
         setState(() {
@@ -73,42 +83,42 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
         title: const Text('Ticket Details'),
       ),
       body: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
                 'Type: ${widget.ticket.type}',
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
                 'Subject: ${widget.ticket.subject}',
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
                 'Details: ${widget.ticket.details}',
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
                 'Status: ${widget.ticket.status}',
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             SizedBox(height: 20),
 
             ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: threadData.length,
               separatorBuilder: (context, index) => Divider(),
@@ -117,15 +127,15 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                 return ListTile(
                   leading: Text(
                     item.username,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   title: Text(
                     item.comment,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   subtitle: Text(
                     item.comment,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                 );
               },
@@ -133,10 +143,10 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
 
             //SizedBox(height: 100),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 'Message: $_message',
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             SizedBox(height: 20),
@@ -145,7 +155,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
               child: TextField(
                 controller: _messageController,
                 maxLines: 5,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Enter your message',
                   border: OutlineInputBorder(),
                 ),
@@ -160,7 +170,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
 
                 // 在此添加调用相机或相册的代码
               },
-              child: Text('Take Photo'),
+              child: const Text('Take Photo'),
             ),
 
             ElevatedButton(
@@ -198,7 +208,7 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
                   // You can handle the exception here
                 });
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),

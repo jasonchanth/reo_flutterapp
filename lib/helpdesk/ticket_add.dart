@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../configuration/config.dart';
 
 class AddTicketPage extends StatefulWidget {
@@ -46,6 +48,8 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
   Future<void> _submitTicket() async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
       // Prepare form data
       FormData formData = FormData();
       formData.fields.add(MapEntry('ticketType', _selectedTicketType));
@@ -67,9 +71,18 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
 
       print(Config.apiUrl);
+      /*Response response = await Dio().post(
+        '${Config.apiUrl}addTicket',
+        data: formData,
+      );*/
       Response response = await Dio().post(
         '${Config.apiUrl}addTicket',
         data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
       if (response.statusCode == 200) {
