@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/threadData.dart';
@@ -23,11 +24,15 @@ class TicketDetailsPage extends StatefulWidget {
   @override
   _TicketDetailsPageState createState() => _TicketDetailsPageState();
 }
-
+enum MediaSelectionType {
+  gallery,
+  camera,
+}
 class _TicketDetailsPageState extends State<TicketDetailsPage> {
   final TextEditingController _messageController = TextEditingController();
   String _message = '';
   List<ThreadData> threadData = [];
+  List<File> selectedMedia = [];
 
   @override
   void initState() {
@@ -73,6 +78,32 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
       }
     } else {
       throw Exception('Failed to fetch tickets');
+    }
+  }
+
+  Future<void> _selectMedia(MediaSelectionType selectionType) async {
+    try {
+      final ImagePicker _picker = ImagePicker();
+      XFile? pickedFile;
+
+      if (selectionType == MediaSelectionType.gallery) {
+        pickedFile = await _picker.pickImage(
+          source: ImageSource.gallery,
+        );
+      } else if (selectionType == MediaSelectionType.camera) {
+        pickedFile = await _picker.pickImage(
+          source: ImageSource.camera,
+        );
+      }
+
+      if (pickedFile == null) return;
+
+      setState(() {
+        selectedMedia.add(File(pickedFile!.path));
+      });
+    } catch (e) {
+      print(e.toString());
+      //_showErrorNotification(context);
     }
   }
 
@@ -162,53 +193,79 @@ class _TicketDetailsPageState extends State<TicketDetailsPage> {
               ),
             ),
             // 添加用于从相机/相册拍照并在用户单击提交按钮时提交的按钮
-            ElevatedButton(
-              onPressed: () {
-                // 拍照或选择相册图片并提交
-                // 注意：需要在 pubspec.yaml 文件中添加相机权限和相册权限
-                // 参考：https://pub.dev/packages/image_picker
-
-                // 在此添加调用相机或相册的代码
-              },
-              child: const Text('Take Photo'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            leading: const Icon(Icons.camera),
+                            title: const Text('打开相机拍照'),
+                            onTap: () {
+                              _selectMedia(MediaSelectionType.camera);
+                              // 在此添加调用相机的代码
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.image),
+                            title: const Text('打开相册选择照片'),
+                            onTap: () {
+                              _selectMedia(MediaSelectionType.gallery);
+                              // 在此添加调用相册的代码
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text('Photo'),
+              ),
             ),
 
-            ElevatedButton(
-              onPressed: () {
-                final ticketID = widget.ticket.id; // Get the ticket ID
-                final userID = '1'; // Replace with the actual user ID
-                final ticketType = 'update'; // Get the ticket type
-                final message = _messageController
-                    .text; // Get the message entered by the user
 
-                final url = Uri.parse('${Config.apiUrl}addThreads');
-                print(url);
-                final headers = {'Content-Type': 'application/json'};
-                final body = json.encode({
-                  'ticketID': ticketID,
-                  'userID': userID,
-                  'ticketType': ticketType,
-                  'message': message,
-                });
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  final ticketID = widget.ticket.id; // Get the ticket ID
+                  final userID = '1'; // Replace with the actual user ID
+                  final ticketType = 'update'; // Get the ticket type
+                  final message = _messageController
+                      .text; // Get the message entered by the user
 
-                http.post(url, headers: headers, body: body).then((response) {
-                  if (response.statusCode == 200) {
-                    // Success
-                    print('Thread added successfully!');
-                    // You can perform any additional actions here after the request is successful
-                  } else {
-                    // Error
-                    print(
-                        'Failed to add thread. Error: ${response.statusCode}');
-                    // You can handle the error condition here
-                  }
-                }).catchError((error) {
-                  // Exception
-                  print('Failed to add thread. Error: $error');
-                  // You can handle the exception here
-                });
-              },
-              child: const Text('Submit'),
+                  final url = Uri.parse('${Config.apiUrl}addThreads');
+                  print(url);
+                  final headers = {'Content-Type': 'application/json'};
+                  final body = json.encode({
+                    'ticketID': ticketID,
+                    'userID': userID,
+                    'ticketType': ticketType,
+                    'message': message,
+                  });
+
+                  http.post(url, headers: headers, body: body).then((response) {
+                    if (response.statusCode == 200) {
+                      // Success
+                      print('Thread added successfully!');
+                      // You can perform any additional actions here after the request is successful
+                    } else {
+                      // Error
+                      print(
+                          'Failed to add thread. Error: ${response.statusCode}');
+                      // You can handle the error condition here
+                    }
+                  }).catchError((error) {
+                    // Exception
+                    print('Failed to add thread. Error: $error');
+                    // You can handle the exception here
+                  });
+                },
+                child: const Text('Submit'),
+              ),
             ),
           ],
         ),
