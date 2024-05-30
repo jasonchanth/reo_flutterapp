@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
                 builder: (context) => PollingStationListPage()),
           );
         },
-        'roles': ['admin'],
+        'roles': ['admin','APROIT'],
       },
       {
         'title': 'Planning',

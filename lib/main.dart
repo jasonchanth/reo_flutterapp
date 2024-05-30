@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
           'password': password,
           'fcmToken': fcmToken ?? fcMToken,
         },
-      ).timeout(Duration(seconds: 10));
+      ).timeout(const Duration(seconds: 10));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
@@ -193,10 +193,12 @@ class _LoginPageState extends State<LoginPage> {
           await prefs.setString('username', username);
           await prefs.setString('password', password);
           await prefs.setString('fcmToken', fcmToken!);
-          await prefs.setInt('userID', responseData['userID']);
+          await prefs.setString('userID', responseData['userID'].toString());
           await prefs.setString('token', responseData['token']);
+          await prefs.setString('userRole', responseData['userRole']);
           print(responseData);
           print(responseData['userID']);
+          print(responseData['userRole']);
 
           /*// Successful login, navigate to the ticket list page
           Navigator.pushReplacement(
@@ -209,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(
               //builder: (context) => HomePage(userRole: 'admin'), // Pass userRole as "admin"
              // builder: (context) => TaskWidget(userRole: 'admin'),
-              builder: (context) => HomePageM(userRole: 'admin'),
+              builder: (context) => HomePageM(userRole: responseData['userRole']),
             ),
           );
         } else {
@@ -239,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
             return AlertDialog(
               title: const Text('Error'),
               content:
-                  Text('Failed to connect to the server. Please try again.'),
+                  const Text('Failed to connect to the server. Please try again.'),
               actions: <Widget>[
                 TextButton(
                   child: const Text('OK'),
@@ -259,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: Text(
+            content: const Text(
                 'Connection timeout. Please check your internet connection and try again.'),
             actions: <Widget>[
               TextButton(

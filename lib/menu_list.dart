@@ -11,7 +11,20 @@ import 'helpdesk/ticket_list.dart';
 import 'helpdesk/helpdesk_main.dart';
 import 'main.dart'; // Assuming you have a separate LoginPage
 
-class menulist extends StatelessWidget {
+class menulist extends StatefulWidget {
+  @override
+  State<menulist> createState() => _menulistState();
+}
+
+class _menulistState extends State<menulist> {
+  late String userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserRole();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -52,11 +65,13 @@ class menulist extends StatelessWidget {
             leading: CircleAvatar(child: Icon(Icons.chrome_reader_mode)),
             title: Text('Home Page'),
             onTap: () {
+              print("Home Page"+ userRole);
+
               Navigator.pushReplacement(
                 context,
                 // MaterialPageRoute(builder: (context) => HomePage(userRole: 'admin')),
                 MaterialPageRoute(
-                    builder: (context) => HomePageM(userRole: 'admin')),
+                    builder: (context) => HomePageM(userRole: userRole)),
               );
             },
           ),
@@ -68,7 +83,7 @@ class menulist extends StatelessWidget {
                 context,
                 // MaterialPageRoute(builder: (context) => HomePage(userRole: 'admin')),
                 MaterialPageRoute(
-                    builder: (context) => const PollingStationMain()),
+                    builder: (context) => const PollingStationListPage()),
               );
             },
           ),
@@ -109,6 +124,15 @@ class menulist extends StatelessWidget {
   Future<String?> _getUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username');
+  }
+
+  Future<String?> _getUserRole()  async{
+    SharedPreferences prefs =  await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        userRole = prefs.getString('userRole') ?? '';
+      });
+    }
   }
 
   Future<void> _logout(BuildContext context) async {

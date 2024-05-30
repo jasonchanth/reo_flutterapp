@@ -15,15 +15,16 @@ import 'menu_list.dart';
 
 import 'MyFirebaseMessagingService.dart';
 
-class PollingStationListPage extends StatefulWidget {
-  const PollingStationListPage({Key? key}) : super(key: key);
+class PollingStationScheduleListPage extends StatefulWidget {
+  const PollingStationScheduleListPage({super.key});
 
   @override
-  _PollingStationListPageState createState() => _PollingStationListPageState();
+  _PollingStationScheduleListPageState createState() => _PollingStationScheduleListPageState();
 }
 
-class _PollingStationListPageState extends State<PollingStationListPage> {
-  List<PollingStation> pollingStations = [];
+class _PollingStationScheduleListPageState extends State<PollingStationScheduleListPage> {
+  List<PollingStation> nonScheduledPollingStationsList = [];
+  List<PollingStation> scheduledPollingStationsList = [];
   bool _isRefreshing = false;
 
   ScrollController _scrollController = ScrollController();
@@ -33,7 +34,8 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
   void initState() {
     super.initState();
     fetchUsername();
-    fetchTickets();
+    fetchNonScheduledPSList();
+    fetchScheduledPSList();
     _scrollController.addListener(_onScroll);
     MyFirebaseMessagingService.registerNotification();
   }
@@ -61,11 +63,13 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
     }
   }
 
-  Future<void> fetchTickets() async {
+  Future<void> fetchNonScheduledPSList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    String? userID = prefs.getString('userID');
     final dio = Dio();
-    final url = '${Config.apiUrl}pollingstationlist/1';
+    final url = '${Config.apiUrl}nonscheduledpollingstationlist/$userID';
+    print(url);
     final response = await dio.get(
       url,
       options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -74,7 +78,40 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
       final pollingStationList = response.data as List<dynamic>;
       print(pollingStationList);
       setState(() {
-        pollingStations = pollingStationList.map((data) {
+        nonScheduledPollingStationsList = pollingStationList.map((data) {
+          final id = data['id'] ?? '';
+          final owner = data['owner'] ?? '';
+          final address = data['address'] ?? '';
+          final phone = data['phone'] ?? '';
+
+          return PollingStation(
+            id: id.toString(),
+            owner: owner.toString(),
+            address: address.toString(),
+            phone: phone.toString(),
+          );
+        }).toList();
+      });
+    } else {
+      throw Exception('Failed to fetch tickets');
+    }
+  }
+  Future<void> fetchScheduledPSList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    String? userID = prefs.getString('userID');
+    final dio = Dio();
+    final url = '${Config.apiUrl}scheduledpollingstationlist/$userID';
+    print(url);
+    final response = await dio.get(
+      url,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+    if (response.statusCode == 200) {
+      final pollingStationList = response.data as List<dynamic>;
+      print(pollingStationList);
+      setState(() {
+        scheduledPollingStationsList = pollingStationList.map((data) {
           final id = data['id'] ?? '';
           final owner = data['owner'] ?? '';
           final address = data['address'] ?? '';
@@ -100,7 +137,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
       });
       try {
         // Fetch new ticket data
-        await fetchTickets().timeout(Duration(seconds: 10));
+        await fetchNonScheduledPSList().timeout(Duration(seconds: 10));
         ;
         await Future.delayed(Duration(seconds: 2));
       } catch (e) {
@@ -142,7 +179,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (pollingStations
+              if (nonScheduledPollingStationsList
                   .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
                   onPressed: _refreshData,
@@ -172,7 +209,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                 shrinkWrap: true,
                 controller: _scrollController,
                 //itemCount: pollingStations.length + 1,
-                itemCount: pollingStations.length,
+                itemCount: nonScheduledPollingStationsList.length,
                 separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
 /*
@@ -202,7 +239,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                     );
                   }*/
 
-                  final pollingStation = pollingStations[index];
+                  final pollingStation = nonScheduledPollingStationsList[index];
                   Color statusColor;
 
                   /* Set the button color based on the ticket status
@@ -238,7 +275,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                           MaterialPageRoute(
                             builder: (context) =>
                                 // TicketDetailsPage(ticket: ticket),
-                            PollingStationMain(pollingStation:pollingStation,initialPage:0),
+                            PollingStationMain(pollingStation:pollingStation,initialPage:1),
                           ),
                         );
                       },
@@ -262,7 +299,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                         MaterialPageRoute(
                           builder: (context) =>
                               //  TicketDetailsPage(ticket: ticket),
-                          PollingStationMain(pollingStation:pollingStation,initialPage:0),
+                          PollingStationMain(pollingStation:pollingStation,initialPage:1),
                         ),
                       );
                     },
@@ -282,7 +319,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                 shrinkWrap: true,
                 controller: _scrollController,
                 //itemCount: pollingStations.length + 1,
-                itemCount: pollingStations.length,
+                itemCount: scheduledPollingStationsList.length,
                 separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
 /*
@@ -312,7 +349,7 @@ class _PollingStationListPageState extends State<PollingStationListPage> {
                     );
                   }*/
 
-                  final pollingStation = pollingStations[index];
+                  final pollingStation = scheduledPollingStationsList[index];
                   Color statusColor;
 
                   /* Set the button color based on the ticket status

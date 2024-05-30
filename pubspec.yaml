@@ -46,7 +46,8 @@ dev_dependencies:
   dio: ^4.0.0
   flutter_slidable:
   image_picker:
-  #flutter_svg: ^2.0.9
+  url_launcher: ^6.1.0
+  #flutter_svg: ^2.00.9
   flutter_test:
     sdk: flutter
 

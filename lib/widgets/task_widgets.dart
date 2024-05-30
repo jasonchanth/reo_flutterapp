@@ -24,7 +24,7 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   Future<void> _fetchMenuData() async {
     try {
-      Response response = await Dio().get('${Config.apiUrl}usermenu/admin');
+      Response response = await Dio().get('${Config.apiUrl}usermenu/${widget.userRole}');
       setState(() {
         menuList = response.data;
       });

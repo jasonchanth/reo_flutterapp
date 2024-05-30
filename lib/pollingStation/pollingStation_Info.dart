@@ -1,36 +1,53 @@
 import 'package:flutter/material.dart';
-class PollingStationInfo extends StatelessWidget {
-  const PollingStationInfo({super.key});
+
+import '../api/MapUtils.dart';
+class PollingStationInfo extends StatefulWidget {
+  final pollingStation;
+  const PollingStationInfo({super.key, required this.pollingStation});
 
   @override
+  State<PollingStationInfo> createState() => _PollingStationInfoState();
+}
+
+class _PollingStationInfoState extends State<PollingStationInfo> {
+  @override
   Widget build(BuildContext context) {
-    return const Column(
+    return  Column(
+      //crossAxisAlignment: CrossAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
 
             children: [
               Text(
-                'Station Code: ABC123',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          'Polling Station: ${widget.pollingStation.id}',
+                //'Station Code: ABC123',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 5),
               Text(
-                'Address: 123 Main Street 123, Anytown USA 12345',
+                'Address: ${widget.pollingStation.address}',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 5),
               Text(
-                'Owner: Miss Chan',
+                'Facility: G/F Multi function room',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 5),
               Text(
-                'Tel: 123-456-7890',
+                'Venue Contact: ${widget.pollingStation.phone}',
                 style: TextStyle(fontSize: 20),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  //MapUtils.openMap((-3.823216) as double, (-38.481700) as double);
+                  MapUtils.pushMap("Hong Kong Convention and Exhibition Centre");
+                },
+                child: const Text('GPS Location'),
               ),
             ],
           ),

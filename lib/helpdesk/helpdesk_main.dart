@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_demo/helpdesk/ticket_add.dart';
 
+import '../widgets/homePageM.dart';
 import 'ticket_list.dart';
 import '../menu_list.dart';
 
 import '../configuration/config.dart';
+
 class Helpdesk extends StatefulWidget {
-  const Helpdesk ({Key? key}) : super(key: key);
+  const Helpdesk({Key? key}) : super(key: key);
 
   @override
   State<Helpdesk> createState() => _HelpdeskState();
@@ -14,34 +16,43 @@ class Helpdesk extends StatefulWidget {
 
 class _HelpdeskState extends State<Helpdesk> {
   int currentPage = 0;
-  List<Widget> page = [
-    const TicketListPage(),
-    AddTicketPage()
-  ];
+  List<Widget> page = [const TicketListPage(), AddTicketPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
-        centerTitle: true,
-        title: const Text("Helpdesk"),
-        backgroundColor: Config.appBarColor)
-      ,
+      appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Helpdesk"),
+          backgroundColor: Config.appBarColor,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              size: 40,
+              Icons.home,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePageM(userRole: 'admin')),
+              );
+            },
+          )
+        ],),
       drawer: menulist(),
-    body:page[currentPage],
+      body: page[currentPage],
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.list),label: 'List'),
-          NavigationDestination(icon: Icon(Icons.add),label: 'Add'),
+          NavigationDestination(icon: Icon(Icons.list), label: 'List'),
+          NavigationDestination(icon: Icon(Icons.add), label: 'Add'),
         ],
-        onDestinationSelected: (int index){
+        onDestinationSelected: (int index) {
           setState(() {
             currentPage = index;
           });
         },
-        selectedIndex:currentPage,
+        selectedIndex: currentPage,
       ),
-
-
     );
     // TODO: implement build
     throw UnimplementedError();

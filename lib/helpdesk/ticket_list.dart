@@ -62,10 +62,18 @@ class _TicketListPageState extends State<TicketListPage> {
   Future<void> fetchTickets() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    String? userId = prefs.getString('userID');
+    String? userRole = prefs.getString('userRole');
+    print(userId);
+    print(userRole);
+    String userinfo = "";
+    if (userId != null && userRole != null) {
+       userinfo = "${userId}_$userRole";
+    }
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
-    const url = '${Config.apiUrl}ticketlist/1';
+    String url = '${Config.apiUrl}ticketlist/$userinfo';
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
@@ -152,6 +160,7 @@ class _TicketListPageState extends State<TicketListPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
+              /*
               if (ticketList
                   .isEmpty) // Add a condition to check if the list is empty
                 ElevatedButton(
@@ -168,7 +177,7 @@ class _TicketListPageState extends State<TicketListPage> {
                     color: Colors.white,
                     size: 80,
                   ),
-                ),
+                ),*/
               ListView.separated(
                 shrinkWrap: true,
                 controller: _scrollController,

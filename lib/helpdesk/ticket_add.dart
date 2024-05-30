@@ -17,7 +17,7 @@ enum MediaSelectionType {
   camera,
 }
 class _AddTicketPageState extends State<AddTicketPage> {
-  final List<String> ticketTypes = ['Type A', 'Type B', 'Type C'];
+  final List<String> ticketTypes = ['Data Purge', 'Delivery', 'EPR App', 'EPR Hardware', 'Network Issue'];
   List<File> selectedMedia = [];
 
   Future<void> _selectMedia(MediaSelectionType selectionType) async {
@@ -180,7 +180,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
                   labelText: 'Ticket Details',
                 ),
               ),
-              DropdownButtonFormField<MediaSelectionType>(
+              /*DropdownButtonFormField<MediaSelectionType>(
                 // 修改此处的类型选择
                 value: currentSelectionType,
                 items: MediaSelectionType.values.map((type) {
@@ -209,6 +209,39 @@ class _AddTicketPageState extends State<AddTicketPage> {
                   _selectedMediaType == MediaSelectionType.gallery
                       ? 'Select from Album'
                       : 'Capture Media',
+                ),
+              ),*/
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: const Icon(Icons.camera),
+                              title: const Text('打开相机拍照'),
+                              onTap: () {
+                                _selectMedia(MediaSelectionType.camera);
+                                // 在此添加调用相机的代码
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.image),
+                              title: const Text('打开相册选择照片'),
+                              onTap: () {
+                                _selectMedia(MediaSelectionType.gallery);
+                                // 在此添加调用相册的代码
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Photo'),
                 ),
               ),
               const SizedBox(height: 16.0),

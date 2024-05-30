@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helpdesk_demo/PollingStation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -12,7 +13,9 @@ import '../menu_list.dart';
 import '../MyFirebaseMessagingService.dart';
 
 class TaskListPage extends StatefulWidget {
-  const TaskListPage({Key? key}) : super(key: key);
+  final pollingStation;
+  const TaskListPage({super.key, required this.pollingStation});
+  // TaskListPage({Key? key, required PollingStation pollingStation}) : super(key: key);
 
   @override
   _TaskListPageState createState() => _TaskListPageState();
@@ -22,6 +25,8 @@ class _TaskListPageState extends State<TaskListPage> {
   List<Task> taskList = [];
   bool _isRefreshing = false;
   int currentPage = 0;
+  List<String> taskNames =['EPR Equipment Received','NetworkCabinet Checked','5G/BroadBand Checked'
+    ,'PRO Login Time','Laptop Synced Time','LAN Cables Completed','Number of Tablet Activated'];
 
   ScrollController _scrollController = ScrollController();
   late String username = ""; // New variable to store the username
@@ -64,7 +69,7 @@ class _TaskListPageState extends State<TaskListPage> {
     //final response = await http.get(Uri.parse('http://192.168.3.12/helpdesk/TicketData_app.php'));
     final dio = Dio();
     //final url = Uri.parse('${Config.apiUrl}ticketlist/1');
-    const url = '${Config.apiUrl}task/A1010';
+     String url = '${Config.apiUrl}task/${widget.pollingStation.id}';
     print(url);
     // final response = await http.get(url,headers: {'Accept-Charset': 'utf-8'},);
     // final response = await dio.get(url,options:Options(headers: {'Accept-Charset': 'utf-8'}));
@@ -72,6 +77,7 @@ class _TaskListPageState extends State<TaskListPage> {
       url,
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
+    print(response.data);
     if (response.statusCode == 200) {
       //final responseBody = utf8.decode(response.bodyBytes);
       //final ticketData = json.decode(responseBody) as List<dynamic>;
@@ -160,23 +166,7 @@ class _TaskListPageState extends State<TaskListPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              if (taskList
-                  .isEmpty) // Add a condition to check if the list is empty
-                ElevatedButton(
-                  onPressed: _refreshData,
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      const Size(double.infinity, 100.0),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.refresh,
-                    color: Colors.white,
-                    size: 80,
-                  ),
-                ),
+
               ListView.separated(
                 shrinkWrap: true,
                 controller: _scrollController,
@@ -218,24 +208,34 @@ class _TaskListPageState extends State<TaskListPage> {
 
                   return ListTile(
                     title: Text(
-                      'Task ${index+1}',
+                      '${index+1}'+'. '+taskNames[index],
                       style: const TextStyle(
                         // fontFamily: 'SimSun',
-                        fontSize: 30, // Adjust the font size here
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        // Adjust the font size here
                         //color: Colors.white,
                       ),
                     ),
-                    subtitle: const Text('XXX XXX XXX'),
+                    //subtitle: const Text('XXX XXX XXX'),
                     trailing: ElevatedButton(
                       onPressed: () {
 
                       },
                       style: ButtonStyle(
+
                         backgroundColor:
                         MaterialStateProperty.all<Color>(statusColor),
                         minimumSize: MaterialStateProperty.all<Size>(
-                          const Size(100, 100), // Customize the button size here
+                          const Size(50, 50), // Customize the button size here
                         ),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                          ),
+                        ),
+
                       ),
                       child:index == 6 ?
                       Text(
